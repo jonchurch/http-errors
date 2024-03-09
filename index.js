@@ -135,9 +135,10 @@ function createClientErrorConstructor (HttpError, name, code) {
     // capture a stack trace to the construction point
     Error.captureStackTrace(err, ClientError)
 
-    // adjust the [[Prototype]]
-    setPrototypeOf(err, ClientError.prototype)
-
+    // adjust the [[Prototype]] if new.target is not this class
+    if (new.target && new.target !== ClientError) {
+      setPrototypeOf(err, new.target.prototype)
+    }
     // redefine the error message
     Object.defineProperty(err, 'message', {
       enumerable: true,
@@ -157,9 +158,12 @@ function createClientErrorConstructor (HttpError, name, code) {
     return err
   }
 
+  // extend HttpError
   inherits(ClientError, HttpError)
+  // dynamically set name of constructor, e.g. NotFound or InternalServerError
   nameFunc(ClientError, className)
 
+  // conform to HttpError class
   ClientError.prototype.status = code
   ClientError.prototype.statusCode = code
   ClientError.prototype.expose = true
@@ -204,8 +208,10 @@ function createServerErrorConstructor (HttpError, name, code) {
     // capture a stack trace to the construction point
     Error.captureStackTrace(err, ServerError)
 
-    // adjust the [[Prototype]]
-    setPrototypeOf(err, ServerError.prototype)
+    // adjust the [[Prototype]] if new.target is not this class
+    if (new.target && new.target !== ServerError) {
+      setPrototypeOf(err, new.target.prototype)
+    }
 
     // redefine the error message
     Object.defineProperty(err, 'message', {
@@ -226,9 +232,12 @@ function createServerErrorConstructor (HttpError, name, code) {
     return err
   }
 
+  // extend HttpError
   inherits(ServerError, HttpError)
+  // dynamically set name of constructor, e.g. NotFound or InternalServerError
   nameFunc(ServerError, className)
 
+  // conform to HttpError class
   ServerError.prototype.status = code
   ServerError.prototype.statusCode = code
   ServerError.prototype.expose = false
