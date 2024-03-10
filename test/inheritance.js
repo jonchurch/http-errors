@@ -10,9 +10,11 @@ function getProtoChain (object) {
   }
   return chain
 }
+
 function getProtoString (object) {
   return getProtoChain(object).join('.')
 }
+
 describe('Inheritance', () => {
   it('Subclasses are instances of themselves', () => {
     class CustomError extends createError.NotFound {}
@@ -31,17 +33,25 @@ describe('Inheritance', () => {
     assert.ok(err instanceof CustomError, `Subclass not instanceof its parent: looking for CustomError ${getProtoString(err)}`)
   })
 
-  it('Dynamic constructors are instances of themselves', () => {
-    const err = createError.NotFound()
+  // const ancestors = (err) => {
+  //   assert.ok(err instanceof Error, `Subclass not instanceof its ancestor: looking for Error ${getProtoString(err)}`)
+  //   assert.ok(err instanceof createError.HttpError, `Subclass not instanceof its grandparent: looking for HttpError ${getProtoString(err)}`)
+  //   assert.ok(err instanceof createError.NotFound, `Subclass not instanceof its grandparent: looking for NotFound ${getProtoString(err)}`)
+  //   assert.ok(err instanceof CustomError, `Subclass not instanceof its parent: looking for CustomError ${getProtoString(err)}`)
+  // }
+})
+
+describe('Inheritance without new keyword', () => {
+  it('Dynamic constructor factory functions return instances of themselves', () => {
+    const err = createError.NotFound('Not Found')
 
     assert.ok(err instanceof createError.NotFound, `Instance not instanceof itself: looking for NotFound ${getProtoString(err)}`)
   })
-  it('Dynamic constructors are instances of their ancestors', () => {
-    const err = createError.NotFound()
+
+  it('Dynamic constructor factory functions return instances of their ancestors', () => {
+    const err = createError.NotFound('Not Found')
 
     assert.ok(err instanceof Error, `Subclass not instanceof its ancestor: looking for Error ${getProtoString(err)}`)
     assert.ok(err instanceof createError.HttpError, `Subclass not instanceof its grandparent: looking for HttpError ${getProtoString(err)}`)
-    // ClientError isn't exported
-    // assert.ok(err instanceof createError.ClientError, `Instance not instanceof its parent: looking for ClientError ${getProtoString(err)}`)
   })
 })
