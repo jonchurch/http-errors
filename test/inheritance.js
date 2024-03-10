@@ -42,6 +42,18 @@ describe('Inheritance', () => {
 })
 
 describe('Inheritance without new keyword', () => {
+  it('createError returns errors that are instances of the associated status\' constructor', () => {
+    const err = createError(404, 'Custom message', { customProperty: 'custom value' })
+
+    assert.ok(err.customProperty === 'custom value', `Custom property not set: looking "for custom value", found ${err.customProperty}`)
+    assert.ok(err instanceof createError.NotFound, `Instance not instanceof itself: looking for NotFound ${getProtoString(err)}`)
+
+    const serverError = createError({ customProperty: 'custom value' })
+
+    assert.ok(serverError.customProperty === 'custom value', `Custom property not set: looking "for custom value", found ${err.customProperty}`)
+    assert.ok(serverError instanceof createError.InternalServerError, `Instance not instanceof itself: looking for InternalServerError ${getProtoString(err)}`)
+  })
+
   it('Dynamic constructor factory functions return instances of themselves', () => {
     const err = createError.NotFound('Not Found')
 
