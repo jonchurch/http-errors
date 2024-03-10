@@ -32,13 +32,6 @@ describe('Inheritance', () => {
     assert.ok(err instanceof createError.NotFound, `Subclass not instanceof its grandparent: looking for NotFound ${getProtoString(err)}`)
     assert.ok(err instanceof CustomError, `Subclass not instanceof its parent: looking for CustomError ${getProtoString(err)}`)
   })
-
-  // const ancestors = (err) => {
-  //   assert.ok(err instanceof Error, `Subclass not instanceof its ancestor: looking for Error ${getProtoString(err)}`)
-  //   assert.ok(err instanceof createError.HttpError, `Subclass not instanceof its grandparent: looking for HttpError ${getProtoString(err)}`)
-  //   assert.ok(err instanceof createError.NotFound, `Subclass not instanceof its grandparent: looking for NotFound ${getProtoString(err)}`)
-  //   assert.ok(err instanceof CustomError, `Subclass not instanceof its parent: looking for CustomError ${getProtoString(err)}`)
-  // }
 })
 
 describe('Inheritance without new keyword', () => {
