@@ -130,7 +130,7 @@ function createClientErrorConstructor (HttpError, name, code) {
   function ClientError (message) {
     // create the error object
     var msg = message != null ? message : statuses.message[code]
-    var err = new Error(msg)
+    var err = Reflect.construct(Error, [msg], new.target || ClientError)
 
     // capture a stack trace to the construction point
     Error.captureStackTrace(err, ClientError)
@@ -203,7 +203,7 @@ function createServerErrorConstructor (HttpError, name, code) {
   function ServerError (message) {
     // create the error object
     var msg = message != null ? message : statuses.message[code]
-    var err = new Error(msg)
+    var err = Reflect.construct(Error, [msg], new.target || ServerError)
 
     // capture a stack trace to the construction point
     Error.captureStackTrace(err, ServerError)
